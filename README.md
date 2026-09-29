@@ -1,69 +1,67 @@
-# Birthday Date Night 🎂
+# Date Night
 
-A little **birthday** web-app to pick where we eat on **Friday, October 2nd
-2026** — designed to feel like an iOS app on your phone (and it works on a
-computer too, where it shows up as a centred phone).
+A mobile‑first web app — styled like a native iOS app — for choosing where to
+have dinner on a special evening in Copenhagen. Browse a curated set of
+restaurants with swipeable photo galleries, real reservation times, Google
+ratings and dietary notes, rate each out of five, and let a live leaderboard
+crown the winner.
 
-## How to open it
+**Live site:** https://onbuyuka.github.io/date-night/
 
-Double-click **`index.html`** — it opens in any web browser. No install needed.
+## Features
 
-**On an iPhone:** open the page in Safari, then tap **Share → Add to Home
-Screen** to keep it as a real full-screen app icon. 💕
+- **iOS‑style interface** — frosted navigation bar, a bottom tab bar
+  (Home · Places · Ranking), safe‑area handling, and "Add to Home Screen"
+  support so it launches full‑screen like an app.
+- **Swipeable galleries** — each venue shows its interior and a few dishes,
+  with swipe/scroll‑snap and dot indicators.
+- **Real availability** — bookable time slots for a table of two, gathered from
+  each venue's own reservation system.
+- **Google ratings** — star rating and review count per venue.
+- **Dietary notes** — a short, per‑venue note (this build highlights
+  pescetarian‑friendliness).
+- **Live leaderboard** — rate venues out of five and watch the ranking sort
+  itself. Ratings persist in the browser via `localStorage`.
 
-## What's inside
+## Tech stack
 
-Three tabs along the bottom, just like an app:
+- Vanilla **HTML, CSS and JavaScript** — no framework, no build step, no runtime
+  dependencies.
+- [Fraunces](https://fonts.google.com/specimen/Fraunces) via Google Fonts.
+- Hosted on **GitHub Pages**, deployed from the `gh-pages` branch.
 
-- **🎂 Birthday** — a little happy-birthday hello with the date.
-- **🍽️ Places** — **10 Copenhagen restaurants** (Osteria 16 has three
-  locations), each with a **swipeable photo gallery** (swipe left/right, or tap
-  the dots) showing the interior vibe *and* a couple of dishes, plus cuisine,
-  address, its Google rating, a pescetarian-fit note, and the real bookable
-  table times for 2 guests on Friday 2 Oct 2026. Tap the stars to **rate each
-  spot out of 5**.
-- **🏆 Ranking** — a live **leaderboard** that ranks the places from your
-  ratings so your favourite rises to number one. 👑
-- Every card has a **"Website & booking"**, **"Map"** and (where available)
-  **"Call"** link.
-- Ratings are saved in your browser on this device, so they're still there next
-  time you open it. Use **"Reset all votes"** on the Ranking tab to start over.
+## Project structure
 
-## The restaurants
+| File | Purpose |
+| --- | --- |
+| `index.html` | App shell — navigation bar, tab screens, tab bar |
+| `styles.css` | Styling (iOS‑inspired) |
+| `app.js` | Rendering, tab navigation, galleries, voting, leaderboard |
+| `data.js` | Restaurant data — edit here to customise venues |
 
-| Restaurant | Cuisine | Area |
-|---|---|---|
-| Scarpetta | Italian trattoria | Nørrebro |
-| Llama | Latin American | Indre By |
-| Restaurant Spuntino | Italian | Vesterbro |
-| Olise | Modern bistro & wine | Vesterbro |
-| Boutique Emilia | Handmade pasta | Indre By |
-| Donna Restaurant | Italian | Indre By |
-| Osteria 16 · Haderslevgade | Italian antipasti | Vesterbro |
-| Osteria 16 · Ravnsborggade | Italian antipasti | Nørrebro |
-| Osteria 16 · Sønder Boulevard | Italian antipasti | Vesterbro |
-| Cleo | Modern shared plates | Nørrebro |
+## Local development
 
-## About the times
+No tooling is required. Clone the repo and open `index.html` directly, or serve
+it locally so relative paths and fonts behave exactly as in production:
 
-The times on each card are **real availability for a table of 2 on Friday
-2 Oct 2026**, walked through each restaurant's own booking system on 29 Sep
-2026 (COFOCO/bordibyen, easyTable, Fresto and Tebi). Slots change fast and no
-table was actually booked, so confirm on the "Website & booking" link. A few
-notes captured while checking:
+```bash
+python -m http.server 8000
+# then open http://localhost:8000
+```
 
-- **Scarpetta (Rantzausgade)** – no online tables for 2; call for cancellations.
-- **Donna** – dinner almost full (only 21:15); lunch 11:30–14:30 wide open.
-- **Osteria 16 · Haderslevgade / Sønder Boulevard** – only 17:00 for 2; rest waitlist.
-- **Osteria 16 · Ravnsborggade** – fully booked for 2; waitlist only.
-- **Boutique Emilia** – set tasting menu, 2.5h seating, 500 DKK/person card hold.
+## Deployment
 
-Interior photos come from each venue's own website or its Google Maps listing
-and are shown by reference (hotlinked), so they always reflect the live image.
+- **`main`** holds the source.
+- Every push to `main` runs [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml),
+  which publishes only the runtime files (`index.html`, `styles.css`, `app.js`,
+  `data.js`) to the **`gh-pages`** branch.
+- **GitHub Pages** serves the `gh-pages` branch at the live URL above.
 
-## Files
+To deploy manually, run the workflow from the Actions tab (`workflow_dispatch`).
 
-- `index.html` — the app shell (nav bar, three tab screens, tab bar)
-- `styles.css` — the iOS-style pink styling
-- `app.js` — tabs, star voting, leaderboard and confetti
-- `data.js` — the restaurant details (edit here to tweak anything)
+## Data & imagery
+
+Menus, opening hours, availability, ratings and photographs are sourced from
+each restaurant's own website and its Google Maps listing. Images are referenced
+(hotlinked) rather than redistributed and remain the property of their
+respective owners.
