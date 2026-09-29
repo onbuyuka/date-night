@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Birthday Date Night 🎂</title>
+
+    <!-- iOS web-app / home-screen support -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Birthday" />
+    <meta name="theme-color" content="#ffdfec" />
+    <link
+      rel="apple-touch-icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%23ffe3ef'/><text x='50%25' y='54%25' font-size='110' text-anchor='middle' dominant-baseline='central'>🎂</text></svg>"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Frosted iOS nav bar -->
+      <header class="navbar">
+        <span class="nav-side nav-left"></span>
+        <span class="nav-title">Happy Birthday</span>
+        <span class="nav-side nav-right"></span>
+      </header>
+
+      <main class="app-main">
+        <!-- ───────── BIRTHDAY ───────── -->
+        <section id="screen-birthday" class="screen active">
+          <div class="balloons" aria-hidden="true">
+            <span>🎈</span><span>🎈</span><span>🎈</span><span>🎈</span><span>🎈</span>
+          </div>
+
+          <div class="bday-hero">
+            <div class="bday-emoji">🎂</div>
+            <h1 class="bday-title">Happy Birthday<span>my love</span></h1>
+          </div>
+
+          <div class="ios-card bday-card">
+            <div class="bday-card-badge">🗓️ Friday, October 2nd 2026</div>
+            <p>
+              For your birthday dinner I've lined up <b>ten lovely spots</b>
+              around Copenhagen. Peek inside each one, see the real table times
+              for two, and give them a rating out of five.
+            </p>
+            <p class="bday-card-soft">
+              Whichever one you love most, that's where I'm taking you. 🥂
+            </p>
+            <button class="btn-primary" data-goto="places">
+              See the places →
+            </button>
+          </div>
+        </section>
+
+        <!-- ───────── PLACES ───────── -->
+        <section id="screen-places" class="screen">
+          <section id="grid" class="grid"></section>
+        </section>
+
+        <!-- ───────── RANKING ───────── -->
+        <section id="screen-ranking" class="screen">
+          <section id="leaderboard" class="leaderboard"></section>
+          <div class="toolbar">
+            <button id="reset-all" class="reset-all">Reset all votes</button>
+          </div>
+        </section>
+      </main>
+
+      <!-- iOS tab bar -->
+      <nav class="tabbar" aria-label="Sections">
+        <button class="tab active" data-tab="birthday" aria-label="Birthday">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 21V13a2 2 0 012-2h10a2 2 0 012 2v8" />
+            <path d="M4 21h16" />
+            <path d="M4 16c1.2.9 2.5.9 4 0s2.8.9 4 0 2.8.9 4 0 2.8.9 4 0" />
+            <path d="M12 8V6" />
+            <circle cx="12" cy="4" r="0.7" fill="currentColor" stroke="none" />
+          </svg>
+          <span>Birthday</span>
+        </button>
+        <button class="tab" data-tab="places" aria-label="Places">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="4.5" width="16" height="6" rx="2.4" />
+            <rect x="4" y="13.5" width="16" height="6" rx="2.4" />
+          </svg>
+          <span>Places</span>
+        </button>
+        <button class="tab" data-tab="ranking" aria-label="Ranking">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 4h10v4a5 5 0 01-10 0V4z" />
+            <path d="M7 6H4v1a3 3 0 003 3M17 6h3v1a3 3 0 01-3 3" />
+            <path d="M9.5 15h5M8 20h8M10 15l-.4 5M14 15l.4 5" />
+          </svg>
+          <span>Ranking</span>
+        </button>
+      </nav>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
