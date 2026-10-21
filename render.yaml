@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: date-night-reader
+    runtime: node
+    plan: free
+    region: frankfurt
+    rootDir: planner
+    buildCommand: node --check scripts/public-web.mjs
+    startCommand: node scripts/public-web.mjs
+    healthCheckPath: /health
+    autoDeployTrigger: "off"
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: WEB_READER_SECRET
+        generateValue: true
