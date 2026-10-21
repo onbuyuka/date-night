@@ -1,0 +1,44 @@
+name: Publish legacy-address redirect
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "redirect/**"
+      - ".github/workflows/redirect.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: pages-redirect
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble redirect only
+        run: |
+          mkdir redirect-site
+          cp redirect/index.html redirect-site/index.html
+          cp redirect/index.html redirect-site/404.html
+          touch redirect-site/.nojekyll
+      - name: Publish redirect branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./redirect-site
+          publish_branch: gh-pages
+          force_orphan: true
+          commit_message: |
+            Publish Date Night redirect
+
+            Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+      - name: Rebuild the redirect site
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method POST "repos/${{ github.repository }}/pages/builds"

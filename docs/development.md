@@ -320,7 +320,17 @@ Review the generated images before committing them.
 
 ## Retired prototype
 
-The original static birthday site and its GitHub Pages publishing workflow
-have been retired. The earlier source remains available in Git history.
-The current frontend and API deploy together at the planner address above;
-GitHub hosts the source and documentation, not a second production app.
+The original static birthday site has been retired. Its source remains
+available in Git history. The current frontend and API deploy together at
+the planner address above.
+
+The former address, https://onbuyuka.github.io/date-night/, serves only a
+redirect. The [`redirect/`](../redirect/) source is published by
+[`redirect.yml`](../.github/workflows/redirect.yml) to a minimal `gh-pages`
+branch containing `index.html`, `404.html` and `.nojekyll`. It does not host
+the planner, user data, credentials or another copy of the application.
+
+GitHub Pages cannot issue a custom server-side 301/302 here, so the stub uses
+`location.replace` with an HTML refresh and clickable-link fallback.
+Planner hash routes and query parameters are preserved by JavaScript;
+obsolete prototype tab fragments are discarded.

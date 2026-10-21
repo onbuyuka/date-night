@@ -14,7 +14,7 @@
     "db:migrate": "wrangler d1 migrations apply planner --local",
     "typecheck": "tsc -p tsconfig.app.json && tsc -p tsconfig.worker.json",
     "build": "npm run typecheck && vite build",
-    "test": "node --test tests/api.test.mjs tests/reader.test.mjs tests/production.test.mjs",
+    "test": "node --test tests/api.test.mjs tests/reader.test.mjs tests/production.test.mjs tests/redirect.test.mjs",
     "test:e2e": "playwright test",
     "screenshots": "npm run build && node scripts/screenshots.mjs"
   },
