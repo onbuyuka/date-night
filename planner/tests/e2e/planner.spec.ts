@@ -309,6 +309,39 @@ test("local organiser and mobile invitees can create, customise, vote, return, a
   }
 });
 
+test("event-header status badges align with the account button and organiser label at every screen size", async ({ page }) => {
+  let status: "draft" | "open" | "closed" = "draft";
+  await page.route("**/api/session", (route) => route.fulfill({
+    status: 200, contentType: "application/json",
+    body: JSON.stringify({ role: "admin", organiserRole: "owner", organiserId: "header-owner", name: "Header owner", setupRequired: false }),
+  }));
+  await page.route("**/api/events/header-layout", (route) => route.fulfill({
+    status: 200, contentType: "application/json",
+    body: JSON.stringify({
+      event: { ...emptyEvent, id: "header-layout", organiserId: "header-owner", title: "Header layout check",
+        date: "2026-11-06", status, createdAt: "2026-10-21T10:00:00Z", updatedAt: "2026-10-21T10:00:00Z" },
+      locations: [], participants: [], participantCount: 0, completedCount: 0, results: [], myRatings: {},
+      viewer: { role: "admin", participantId: null, name: "Header owner" },
+    }),
+  }));
+  for (const nextStatus of ["draft", "open", "closed"] as const) {
+    status = nextStatus;
+    await page.goto("/#/event/header-layout");
+    await page.reload();
+    await expect(page.getByRole("heading", { name: "Header layout check", exact: true })).toBeVisible();
+    for (const width of [1440, 390, 360]) {
+      await page.setViewportSize({ width, height: 1000 });
+      const navigation = page.locator(".topbar-end");
+      const button = await navigation.getByRole("button", { name: "Your account", exact: true }).boundingBox();
+      const badge = await navigation.locator(".status").boundingBox();
+      const label = await navigation.getByText("Organiser", { exact: true }).boundingBox();
+      expect(Math.abs((badge!.y + badge!.height / 2) - (button!.y + button!.height / 2))).toBeLessThan(1);
+      expect(Math.abs((label!.y + label!.height / 2) - (button!.y + button!.height / 2))).toBeLessThan(1);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    }
+  }
+});
+
 test("sign-in recovery help is spaced below the button and centred on desktop and phones", async ({ page }) => {
   await page.route("**/api/session", (route) => route.fulfill({
     status: 200, contentType: "application/json", body: JSON.stringify({ role: null, setupRequired: false }),
