@@ -334,3 +334,16 @@ GitHub Pages cannot issue a custom server-side 301/302 here, so the stub uses
 `location.replace` with an HTML refresh and clickable-link fallback.
 Planner hash routes and query parameters are preserved by JavaScript;
 obsolete prototype tab fragments are discarded.
+
+Both entry pages include identical static titles, descriptions and Open Graph/
+Twitter preview tags, with one public brand image at the main app origin.
+Messaging crawlers do not need to run the redirect script or sign in to fetch
+these fields. Previews are generic: private event names, guests and invitation
+tokens are never embedded in them.
+
+To refresh the original SVG-based social image, run `npm run social-image`
+from `planner/`, then rebuild and deploy the planner. The PNG is 1200 x 630;
+it does not contain screenshots, event data or third-party photographs.
+Keep preview metadata in both HTML entry pages in sync; the redirect tests
+check their equality. Previously shared links may keep cached previews until
+the messaging service refreshes its cache.
