@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "date-night-local",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-07-01",
+  "workers_dev": false,
+  "vars": {
+    "LOCAL_DEV": "true",
+    "APP_ORIGIN": "http://127.0.0.1:5173",
+    "LOCAL_WEB_FETCH_ORIGIN": "http://127.0.0.1:8791"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "planner",
+      "database_id": "00000000-0000-0000-0000-000000000001",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

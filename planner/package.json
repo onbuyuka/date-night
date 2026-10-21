@@ -1,0 +1,40 @@
+{
+  "name": "date-night-planner",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "setup:local": "node scripts/setup-local.mjs",
+    "predev": "npm run setup:local",
+    "dev": "concurrently --kill-others-on-fail --names api,web,fetch \"npm:dev:api\" \"npm:dev:web\" \"npm:dev:fetch\"",
+    "dev:fetch": "node --watch scripts/public-web.mjs",
+    "dev:web": "vite --host 127.0.0.1",
+    "predev:api": "npm run setup:local",
+    "dev:api": "wrangler dev --local --ip 127.0.0.1 --port 8787",
+    "db:migrate": "wrangler d1 migrations apply planner --local",
+    "typecheck": "tsc -p tsconfig.app.json && tsc -p tsconfig.worker.json",
+    "build": "npm run typecheck && vite build",
+    "test": "node --test tests/api.test.mjs tests/reader.test.mjs tests/production.test.mjs",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "image-size": "^2.0.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261006.1",
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "concurrently": "^9.2.0",
+    "esbuild": "^0.25.0",
+    "miniflare": "^4.20260730.0",
+    "typescript": "~5.8.3",
+    "vite": "^6.4.1",
+    "wrangler": "^4.150.0"
+  }
+}

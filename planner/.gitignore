@@ -4,5 +4,6 @@ dist/
 .dev.vars*
 .env*
 *.local
+.owner-*.local.html
 test-results/
 playwright-report/
