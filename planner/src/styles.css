@@ -586,6 +586,7 @@ progress::-moz-progress-bar { background: var(--accent); border-radius: 10px; }
 .place-sources { display: flex; flex-wrap: wrap; gap: 12px; font-size: 10px; color: var(--muted); margin-top: 13px; }
 .place-sources > a { color: var(--muted); }
 .welcome-panel-copy .field-help { font-size: 10px; }
+.welcome-panel-copy > p.sign-in-help { margin: 14px 0 0; font-size: 11px; line-height: 1.6; text-align: center; }
 @media (max-width: 580px) {
   .mood-romantic .event-intro, .mood-birthday .event-intro { padding: 90px 19px 20px; margin-left: -3px; margin-right: -3px; }
   .mood-romantic .event-intro h1, .mood-birthday .event-intro h1 { font-size: 35px; }

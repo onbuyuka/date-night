@@ -309,6 +309,27 @@ test("local organiser and mobile invitees can create, customise, vote, return, a
   }
 });
 
+test("sign-in recovery help is spaced below the button and centred on desktop and phones", async ({ page }) => {
+  await page.route("**/api/session", (route) => route.fulfill({
+    status: 200, contentType: "application/json", body: JSON.stringify({ role: null, setupRequired: false }),
+  }));
+  await page.goto("/");
+  const button = page.getByRole("button", { name: "Sign in", exact: true });
+  const help = page.getByText("Ask the person who invited you for a password reset link.", { exact: true });
+  for (const width of [1440, 390, 360]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await expect(button).toBeVisible();
+    await expect(help).toBeVisible();
+    await expect(help).toHaveCSS("text-align", "center");
+    const buttonBounds = await button.boundingBox();
+    const helpBounds = await help.boundingBox();
+    expect(helpBounds!.y - (buttonBounds!.y + buttonBounds!.height)).toBeGreaterThanOrEqual(12);
+    expect(helpBounds!.x).toBeGreaterThanOrEqual(buttonBounds!.x - 1);
+    expect(helpBounds!.x + helpBounds!.width).toBeLessThanOrEqual(buttonBounds!.x + buttonBounds!.width + 1);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  }
+});
+
 test("welcome and organiser dashboard fit a small phone without horizontal scrolling", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/");

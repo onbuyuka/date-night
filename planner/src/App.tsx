@@ -77,7 +77,7 @@ function Welcome({ session, onSessionChange }: { session: Session; onSessionChan
             </fieldset>
           </Form>
           {task.error && <ErrorBox>{task.error}</ErrorBox>}
-          {!session.setupRequired && <p className="field-help">Ask the person who invited you for a password reset link.</p>}
+          {!session.setupRequired && <p className="sign-in-help">Ask the person who invited you for a password reset link.</p>}
           <p className="local-disclaimer"><Icon name="lock" size={13} />Your guests join with personal invitations, not this account.</p>
         </div>
       </section>
