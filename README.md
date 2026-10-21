@@ -1,355 +1,121 @@
+<div align="center">
+
 # Date Night
 
-A mobile-first location-voting app for getting people together. The repository
-contains an invite-only event planner and the original birthday website.
+### Less “where shall we go?” More looking forward to it.
 
-**Event planner:** https://date-night.onbuyuka.workers.dev/
-**Original birthday site:** https://onbuyuka.github.io/date-night/
+A private place to shortlist venues, set the mood, and let everyone have a say.
+For birthday dinners, evenings for two, coffee catch-ups, and plans with friends.
 
-## Event planner
+**[Open Date Night](https://date-night.onbuyuka.workers.dev/)** ·
+**[How it works](#from-maybe-to-made-a-plan)** ·
+**[Run your own](docs/development.md)**
 
-The application lives in [`planner/`](planner/). React and TypeScript provide
-the frontend, with a same-origin Worker API and D1 persistence. A small
-Node.js service reads public venue websites. The original birthday site and
-its GitHub Pages deployment are separate and unchanged.
+*Organiser access is invite-only. Guests join through their personal invitation.*
 
-Local development runs entirely on your computer and does not provision
-cloud resources. Hosting uses the explicitly selected Free plans; provider
-quotas and service availability still apply.
+</div>
 
-### Capabilities
+![A birthday invitation with a pink theme, three venue cards, image galleries and five-star voting](docs/screenshots/event-desktop.png)
 
-- Create, edit, and delete your own private events as an organiser.
-- Join as an organiser only through an expiring, single-use invitation from
-  the owner. Organisers cannot browse or manage each other's events, and the
-  owner does not receive an exception to this rule.
-- The owner can issue/revoke organiser invitations, create password-reset
-  links, and suspend/reactivate accounts. Suspension pauses that organiser's
-  events, voting links and hosted photos without deleting their data.
-- Change your password from **Your account**. Organiser and event-guest
-  sessions are separate, so joining a friend's event preserves your workspace.
-- Set an event name, required date, occasion, and introduction.
-- Set the event's default city once. Location searches inherit it, with a
-  collapsed **Change search area** override when needed. Addresses and map
-  positions already present in a Maps link take priority over the default.
-- Choose a Romantic, Birthday, Friends, or Minimal mood. Moods change the
-  greeting, layout, typography, and decorative touches; colours and accent
-  remain independently configurable. Decorations can be disabled per event;
-  when reduced motion is requested, enabled decorations remain visible
-  without animating.
-- Upload a cover photo and up to six gallery photos per location, with
-  previews and automatic compression.
-- Paste a Google Maps link and explicitly choose **Find place** to expand
-  sharing links and search TomTom for matching venues. Confirm the
-  branch before applying its name, address, coordinates, and recorded website.
-- When a supplied website is missing or cannot be read, review website
-  suggestions. Search prefers the known website domain before searching more
-  widely. A result is not treated as an official site automatically: choose
-  **Read this website** to check it before applying any details.
-- Use the discovered website, or paste one yourself, to preview structured
-  venue details, menu links, and photo suggestions. Choose which fields to
-  apply; existing text is not replaced automatically.
-- Photos from a website start unselected and require permission confirmation
-  before they are downloaded, compressed, and saved as private local images.
-  Google ratings and review counts are not imported.
-- Create named participants and personal, passwordless invitation links.
-- Rate locations from one to five. Ratings save to the database, remain
-  editable while voting is open, and restore when the same invitation is used
-  in a different browser session.
-- View live group averages and rating counts, refreshed every eight seconds.
-  Unrated locations do not count as zero; equal averages share a rank.
-- Close or reopen voting, revoke invitations, and generate replacement links
-  without deleting saved votes.
+## Make a plan people want to open
 
-### Run locally
+The group chat is great for getting everyone together. Choosing a place?
+That usually takes a few more messages.
 
-From the repository root, in PowerShell:
+Date Night gives the plan a home: one shortlist, one invitation, and a clear
+picture of what everyone likes. No spreadsheet. No guest signup. No votes
+disappearing when someone closes a tab.
 
-```powershell
-Set-Location .\planner
-npm ci
-npm run db:migrate
-npm run dev
-```
-
-Open **http://127.0.0.1:5173/** and create your organiser username and password
-on first use. Subsequent visits require sign-in. Participants still use their
-personal invitations, without accounts.
-The API listens on `127.0.0.1:8787`; Vite proxies browser requests to it.
-A restricted public-website reader listens on `127.0.0.1:8791`.
-`npm run dev` starts all three local processes.
-The development scripts operate locally and do not provision Cloudflare resources. The
-first `npm run dev` creates a random authentication key in the ignored
-`planner/.dev.vars` file. Never commit that file.
-Starting the API directly also runs this setup check. If the key is created
-while an older preview is already running, stop and restart the preview so
-the API loads it. Do not delete or regenerate an existing key to fix a startup
-problem. The health endpoint reports an error until authentication is configured.
-
-For automatic venue and website discovery, add free-plan API keys to that
-same ignored `planner/.dev.vars` file:
-
-```dotenv
-TOMTOM_API_KEY=your_tomtom_key
-TAVILY_API_KEY=your_tavily_key
-```
-
-Keep the existing `AUTH_SECRET` unchanged. Never put these keys in frontend
-code or variables prefixed with `VITE_`. Restart an older preview after adding
-keys so the API loads them. Missing provider configuration is reported
-explicitly; manual location and website entry still work.
-Use the providers' free plans without payment details, prepaid credit, or
-pay-as-you-go. The application never upgrades a plan.
-
-Create an event, add locations and people, and open voting. Copy a person's
-invitation and open it in a private/incognito window to try the guest view
-without replacing your organiser session.
-
-The development servers deliberately bind to loopback. Local invitation links
-work on this computer, not on another phone or over the internet.
-
-### Production deployment
-
-Production uses [`wrangler.production.jsonc`](planner/wrangler.production.jsonc),
-not the local preview configuration. The frontend and API share one HTTPS
-origin. The production database starts empty: test accounts, events, votes
-and images are not copied. Local test data remains in place.
-
-The website reader is deployed separately using [`render.yaml`](render.yaml):
-
-- Exactly one Node.js web service on the **Free** plan, with no database,
-  disk, npm dependencies or venue-domain allowlist.
-- `WEB_READER_SECRET` is generated privately by the hosting service. Save a
-  private local copy in `planner/.reader.vars.local` for the backend connection.
-  This is not a Render account API key.
-- Requests are authenticated; at most three reads run concurrently.
-  Actual connection-time DNS checks and TLS validation are retained.
-- The reader receives public website/photo URLs only, not organiser
-  passwords, guest identities, votes, uploaded private images or search keys.
-- The Free service sleeps after inactivity. A first import can take roughly
-  a minute to start; the backend allows for this. Normal browsing and voting
-  do not depend on this service. It has no production uptime guarantee.
-
-From `planner/`, after reviewing the production target and signing into the
-deployment CLI:
-
-```powershell
-npm run build
-npm test
-npm run test:e2e
-node scripts/production.mjs prepare
-node scripts/production.mjs deploy
-node scripts/production.mjs owner-link
-```
-
-`prepare` creates or reuses the named production database, applies migrations,
-and creates a separate production authentication secret. Provider keys are
-read from the ignored local configuration; the reader credential is separate.
-`deploy` scans the browser build for known secret values and uploads private
-credentials atomically with the Worker version, never as public variables.
-
-There is no public first-visitor signup. `owner-link` writes a one-use,
-24-hour owner invitation to the ignored `.owner-invitation.local.html` file.
-Open it locally to choose the real owner username/password; do not share it.
-Subsequent organiser invitations expire after seven days. Password reset
-links expire after 30 minutes. Owner recovery is an operator-only action:
-
-```powershell
-node scripts/production.mjs owner-reset
-```
-
-That writes an ignored `.owner-reset.local.html` file; it does not change the
-password until the link is redeemed. Back up the production authentication
-secret separately from the production database. Never delete or regenerate
-it as a routine deployment step.
-
-All `.env*`, `.dev.vars*`, `*.local`, and private owner-link files are ignored.
-They must never be committed, included in frontend assets, or sent in chat.
-Do not add payment details, prepaid credit, or a pay-as-you-go subscription.
-
-### Persistence and access
-
-- The database persists under `planner/.wrangler/state/` across server restarts.
-  That directory is ignored by Git; removing it removes the local data.
-- Guests receive server-validated sessions. Raw invitation tokens are only
-  returned when generated; the database stores their hashes. Copy the link
-  before closing the invitation dialog, or generate a replacement later.
-- Invitation links are credentials: anyone holding one can use that person's
-  ballot. Revoking or replacing a link invalidates their existing sessions.
-- The former one-click organiser shortcut has been removed. First-account
-  setup is restricted to local loopback hosts and cannot overwrite an existing
-  owner. Production requires the privately issued owner invitation.
-  Passwords must be at least 12 characters.
-- Password verification uses salted PBKDF2-SHA-256 (100,000 iterations, the
-  Workers runtime limit) plus an HMAC pepper stored separately from the
-  database. Sessions and invitation credentials are stored as hashes.
-  Back up `.dev.vars` alongside the database: losing its authentication key
-  prevents verification of the existing organiser password.
-- Login attempts are limited to ten per source per fifteen minutes.
-  Invitations, organiser writes, uploads, and Maps resolution have separate
-  limits. Request bodies are bounded while streaming, before full buffering.
-  These are application controls, **not a guarantee against DDoS**.
-  Production uses HTTPS, strict Origin checks, secure HttpOnly cookies,
-  restrictive browser headers and bounded provider budgets. The unchanged
-  password hashing passed a hosted runtime probe; free-runtime limits must
-  still be monitored under real usage.
-- The local D1 identifier is a placeholder. Production has a separate
-  database binding and configuration; do not deploy the local configuration.
-- Uploaded JPEG, PNG and WebP photos are compressed in the browser and checked
-  on the server for file type, dimensions, and size. SVG uploads are rejected.
-  Each stored image is limited to 384 KiB, with a 100 MiB workspace photo
-  budget. Images are stored in local D1 and require event access to view.
-  Unused staged uploads expire after a day; removed event photos are cleaned
-  up. Use photographs you have permission to share.
-- Maps resolution is organiser-only, follows only approved Maps sharing
-  hosts, and bounds both redirect count and network timeout.
-- Website requests go through a separate helper using Node's built-in HTTPS
-  client. It checks DNS addresses at connection time and pins the checked
-  addresses to that TLS connection. Private/reserved addresses, IP-literal
-  URLs, non-HTTPS destinations, credentials, and nonstandard ports are
-  rejected. Local credentials are never forwarded to venue websites.
-  TLS certificate checks remain enabled; organisational network controls are
-  not bypassed.
-- Website reading respects applicable robots rules, limits redirects and
-  response sizes, and parses public metadata rather than executing scripts.
-  Sites that block access, require JavaScript, or omit structured details
-  may need manual entry.
-- Google ratings, menu contents, and reservation availability are not part of
-  the planner.
-
-### Free import sources and limits
-
-Place matching uses [TomTom Places Search Discover](https://docs.tomtom.com/places-search-api/documentation/places-search/discover).
-The Maps pin biases branch selection; otherwise searches use the event city
-or the organiser's search-area override. Name, address and website suggestions
-must be checked before use. Normalized candidates are cached for one hour.
-Nominatim is no longer used. Existing saved OpenStreetMap source references
-are preserved. Source acknowledgements are available under **Data credits**
-in the event footer; provider names stay out of the normal interface and
-user-facing error messages.
-
-Website discovery uses [Tavily basic search](https://docs.tavily.com/documentation/api-credits).
-If an existing website is known, the first search is restricted to its domain;
-returned URLs are checked against that domain too. Empty domain results can
-trigger one broader search. The organiser can also explicitly choose
-**Search more widely**. These results are suggestions, not proof of ownership,
-branch identity, or a working menu. Selecting a result only reads its metadata;
-it does not save a location or select photos. Suggestions are cached for one day.
-
-- Provider searches are organiser-only. No autocomplete, guest-view polling,
-  or voting action calls either provider.
-- Only public venue names, addresses, search areas, and Maps coordinates are
-  sent. Event descriptions, guests, invitations, and local authentication
-  credentials are never included.
-- Provider keys are sent only to fixed vendor endpoints. Redirects are not
-  followed with credentials. Venue websites use the separate guarded reader
-  and never receive these keys.
-- D1 enforces provider locks, backoff, and conservative rolling 31-day budgets:
-  **4,500 TomTom requests** and **900 Tavily basic searches**. Reservations are
-  atomic and survive restarts. Failed attempts count conservatively; cache
-  hits do not. These counters cover this app, not playgrounds or other apps
-  using the same provider account.
-- Only basic Tavily search is requested, at one credit per call. Domain-first
-  recovery uses at most two calls per request. No advanced search, generated
-  answers, Tavily Extract, Map, Crawl, paid fallback, or LLM is enabled.
-- Exhausted budgets, unavailable providers, missing keys, and malformed
-  responses produce explicit errors. Manual website and location entry remain
-  available.
-
-Website previews are cached for one hour. The importer reads JSON-LD,
-Open Graph metadata, and candidate menu links from the chosen page. It does
-not crawl a complete site or claim that every venue will publish usable
-metadata. HTML is limited to 2 MB after decompression; timeout, redirect, and
-public-network restrictions still apply. Reader failures retain their actual
-explanation rather than being presented as a missing venue page. Sources
-are shown in the preview and on saved cards.
-
-The same public-only website helper runs locally and on the selected Free
-hosting service. The backend fails closed when it is not configured or its
-private service credential is rejected. Provider data-retention/licensing
-terms, quotas, attribution, and resource limits remain operator responsibilities.
-
-### Checks
-
-Run these commands from `planner/`:
-
-```powershell
-npm run build
-npm test
-npm run test:e2e
-```
-
-The build checks both frontend and Worker types. API tests use an isolated,
-temporary D1 database. Playwright tests exercise the real local frontend and
-API on separate test-only ports (5174 and 8789), with an isolated temporary
-database. Browser-test startup uses fake credentials only and never loads
-local key files. Tests create their own organiser, upload generated photo fixtures,
-and use separate organiser and mobile guest sessions. They never create an
-account in your local workspace or overwrite its password. Automated tests
-use a separate fixture reader/provider server on port 8793 and fake API keys;
-they make no external image, venue, or search requests. No extra npm
-dependencies are needed for the importer.
-
-On Windows, browser tests use installed Microsoft Edge in headless mode. On
-other platforms, install Playwright's Chromium with `npx playwright install chromium`
-before running the browser tests.
-
-## Original birthday website
-
-- **iOS‑style interface** — frosted navigation bar, a bottom tab bar
-  (Home · Places · Ranking), safe‑area handling, and "Add to Home Screen"
-  support so it launches full‑screen like an app.
-- **Swipeable galleries** — each venue shows its interior and a few dishes,
-  with swipe/scroll‑snap and dot indicators.
-- **Real availability** — bookable time slots for a table of two, gathered from
-  each venue's own reservation system.
-- **Google ratings** — star rating and review count per venue.
-- **Dietary notes** — a short, per‑venue note (this build highlights
-  pescetarian‑friendliness).
-- **Live leaderboard** — rate venues out of five and watch the ranking sort
-  itself. Ratings persist in the browser via `localStorage`.
-
-### Original site stack
-
-- Vanilla **HTML, CSS and JavaScript** — no framework, no build step, no runtime
-  dependencies.
-- [Fraunces](https://fonts.google.com/specimen/Fraunces) via Google Fonts.
-- Hosted on **GitHub Pages**, deployed from the `gh-pages` branch.
-
-## Project structure
-
-| File | Purpose |
+| Make it yours | Make it easy |
 | --- | --- |
-| `index.html` | App shell — navigation bar, tab screens, tab bar |
-| `styles.css` | Styling (iOS‑inspired) |
-| `app.js` | Rendering, tab navigation, galleries, voting, leaderboard |
-| `data.js` | Restaurant data — edit here to customise venues |
-| `planner/` | New local event planner: frontend, Worker API, migrations, and tests |
+| **A mood, not just a colour.** Romantic, Birthday, Friends and Minimal change the greeting, typography and decoration. Choose the palette separately. | **A link, not another guest account.** Each person gets a private invitation and can start rating straight away. |
+| **Your city. Your places.** Start with a Maps link, confirm the branch, and add venues wherever the event is happening. | **Five stars. Saved.** Rate each place from one to five. Change your mind while voting is open. |
+| **Show the place.** Add galleries, a menu link, descriptions and personal notes so guests can picture the evening. | **A ranking that updates.** See average scores and rating counts, then close voting when it's time to decide. |
 
-## Run the original birthday website
+## From “maybe” to “made a plan”
 
-No tooling is required. Clone the repo and open `index.html` directly, or serve
-it locally so relative paths and fonts behave exactly as in production:
+### 1. Give the occasion its own space
 
-```bash
-python -m http.server 8000
-# then open http://localhost:8000
-```
+Choose a name, date and city. Write a personal greeting and set the mood.
+A birthday can be pink and celebratory; a catch-up with friends can feel
+entirely different.
 
-## Existing deployment
+![An organiser workspace with birthday, friends and date-night events](docs/screenshots/workspace-desktop.png)
 
-- **`main`** holds the source.
-- Every push to `main` runs [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml),
-  which publishes only the runtime files (`index.html`, `styles.css`, `app.js`,
-  `data.js`) to the **`gh-pages`** branch.
-- **GitHub Pages** serves the `gh-pages` branch at the live URL above.
+### 2. Build the shortlist
 
-To deploy manually, run the workflow from the Actions tab (`workflow_dispatch`).
-This workflow does **not** build or publish the new `planner/` application.
+Paste a Google Maps link and confirm the right venue and branch. Where the
+sources publish usable details, preview website information, menu links and
+photo suggestions. **You choose what to keep.** Your own notes and uploads
+always remain an option.
 
-## Data & imagery
+### 3. Invite, rate, decide
 
-Menus, opening hours, availability, ratings and photographs are sourced from
-each restaurant's own website and its Google Maps listing. Images are referenced
-(hotlinked) rather than redistributed and remain the property of their
-respective owners.
+Send each guest their personal link. They can browse the places, swipe through
+photos and rate their favourites on a phone or desktop. Ratings save as they
+go; the group ranking refreshes automatically.
+
+<table>
+  <tr>
+    <th>Give each place a little love</th>
+    <th>See where the group lands</th>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/voting-mobile.png" alt="A phone-sized venue card with its gallery, menu link and a saved five-star rating" width="340"></td>
+    <td><img src="docs/screenshots/ranking-mobile.png" alt="A phone-sized leaderboard showing average scores and the number of ratings" width="340"></td>
+  </tr>
+</table>
+
+Unrated places don't count as zero. Equal scores share a rank. When voting
+closes, guests can still see the results without changing their ratings.
+
+## Different plans. Different personalities.
+
+Moods and colours are independent, so you can make a romantic invitation
+without making every event look like a date. Add your own accent colour,
+cover image and greeting, or keep it simple.
+
+![Event settings with mood choices, a live invitation preview and independent colour palettes](docs/screenshots/customise-desktop.png)
+
+## Private by design
+
+- **Invitation-only organisers.** Only the owner can invite new organisers.
+  Account invitations expire and can only be used once.
+- **Your events stay yours.** Organisers cannot browse each other's private
+  events. The owner doesn't get a special view into them either.
+- **Guest access stays with the event.** Voting invitations don't create
+  organiser accounts. Replace or revoke a link without deleting saved votes.
+- **Access can be paused.** Suspending an organiser pauses their events and
+  guest links without deleting their data.
+
+Treat personal invitations like keys: anyone holding a guest link can use
+that person's ballot.
+
+## A few honest limits
+
+Date Night helps you **choose a location**. It doesn't reserve tables, verify
+availability, import review scores, or guarantee dietary suitability.
+
+Automatic imports are best-effort. Some websites block reading or don't
+publish useful metadata; suggested sites and photos need a human check.
+Photos are never selected for import automatically and require permission
+confirmation. On free hosting, the first website read after inactivity can
+take about a minute. Normal browsing and voting don't depend on that reader.
+
+## Get started
+
+**Invited to an event?** Open the personal link your organiser sent you.
+You don't need an organiser account.
+
+**Invited to organise?** Use the account invitation to choose your username
+and password, then create your first event.
+
+**Want to run your own?** See the [development and deployment guide](docs/development.md)
+for local setup, hosting, private credentials, quotas and tests. The current
+installation uses free service plans; their limits and terms still apply.
+
+---
+
+*Screenshots show the real application with fictional demo events, people,
+venues and votes. Venue illustrations are original demo artwork, not
+photographs of real businesses. No private event data is shown.*
