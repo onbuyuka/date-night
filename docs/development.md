@@ -267,6 +267,17 @@ hosting service. The backend fails closed when it is not configured or its
 private service credential is rejected. Provider data-retention/licensing
 terms, quotas, attribution, and resource limits remain operator responsibilities.
 
+### Dependency maintenance
+
+[Dependabot](../.github/dependabot.yml) checks npm dependencies in `planner/`
+and GitHub Actions weekly. Minor and patch npm version updates are grouped;
+major updates stay separate. Security updates run independently when GitHub
+detects a vulnerable dependency. Run the checks below before accepting updates.
+Production deployment remains an explicit, separate operation.
+
+The scoped Miniflare overrides keep its pinned Sharp and Undici dependencies on
+the patched `0.35.5` and `7.30.1` releases. Reassess them when upgrading Miniflare.
+
 ### Checks
 
 Run these commands from `planner/`:
