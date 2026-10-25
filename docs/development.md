@@ -61,6 +61,8 @@ quotas and service availability still apply.
 
 ### Run locally
 
+Use Node.js 22 or later for the current Cloudflare development tooling.
+
 From the repository root, in PowerShell:
 
 ```powershell
@@ -277,6 +279,8 @@ Production deployment remains an explicit, separate operation.
 
 The scoped Miniflare overrides keep its pinned Sharp and Undici dependencies on
 the patched `0.35.5` and `7.30.1` releases. Reassess them when upgrading Miniflare.
+Shared frontend and API validation uses Zod 4; retain the API validation and
+browser tests when updating schemas or their defaults.
 
 ### Checks
 
