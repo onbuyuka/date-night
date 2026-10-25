@@ -35,7 +35,7 @@
     "concurrently": "^9.2.0",
     "esbuild": "^0.25.0",
     "miniflare": "^4.20260730.0",
-    "typescript": "~5.8.3",
+    "typescript": "~7.0.2",
     "vite": "^6.4.4",
     "wrangler": "^4.151.1"
   },
