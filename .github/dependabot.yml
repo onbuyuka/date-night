@@ -1,4 +1,5 @@
 version: 2
+# Use the npm directory's public registry settings, not local feed credentials.
 updates:
   - package-ecosystem: npm
     directory: /planner

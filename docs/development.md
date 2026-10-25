@@ -282,6 +282,11 @@ the patched `0.35.5` and `7.30.1` releases. Reassess them when upgrading Minifla
 Shared frontend and API validation uses Zod 4; retain the API validation and
 browser tests when updating schemas or their defaults.
 
+[npm configuration](../planner/.npmrc) selects the public registry. Lockfiles
+retain exact versions and integrity hashes but omit registry-specific tarball
+URLs so local corporate caches cannot make Dependabot depend on inaccessible
+feeds. No feed credentials are needed or stored.
+
 ### Checks
 
 Run these commands from `planner/`:
