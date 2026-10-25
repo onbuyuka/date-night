@@ -13,6 +13,23 @@ updates:
         update-types:
           - minor
           - patch
+    # Majors held back on purpose; see the "remaining PRs" review (2026-10-25).
+    # Vite 8, @vitejs/plugin-react 6 and Vitest 5 only work together, so they are
+    # done as one planned migration rather than as separate PRs. TypeScript 7 is a
+    # compiler rewrite to adopt deliberately. @types/node follows the Node runtime.
+    ignore:
+      - dependency-name: vite
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@vitejs/plugin-react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: vitest
+        update-types: ["version-update:semver-major"]
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: concurrently
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
