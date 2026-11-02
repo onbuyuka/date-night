@@ -119,3 +119,12 @@ installation uses free service plans; their limits and terms still apply.
 *Screenshots show the real application with fictional demo events, people,
 venues and votes. Venue illustrations are original demo artwork, not
 photographs of real businesses. No private event data is shown.*
+
+## License
+
+The original code and documentation in this repository are licensed under the
+[MIT License](LICENSE).
+
+Third-party code, dependencies, data, images, and other content retain their own
+licenses and terms and are not covered by this license. No trademark rights are
+granted.

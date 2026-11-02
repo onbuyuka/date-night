@@ -2,6 +2,7 @@
   "name": "date-night-planner",
   "private": true,
   "version": "0.1.0",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "setup:local": "node scripts/setup-local.mjs",
