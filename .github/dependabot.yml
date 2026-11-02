@@ -5,6 +5,10 @@ updates:
     directory: /planner
     schedule:
       interval: weekly
+    # Our local npm mirror only serves releases about a week after publication, so
+    # wait 8 days before proposing a version (security updates are not delayed).
+    cooldown:
+      default-days: 8
     groups:
       minor-and-patch:
         applies-to: version-updates
